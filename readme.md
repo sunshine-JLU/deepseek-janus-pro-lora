@@ -5,9 +5,9 @@ Follow these steps to get started quickly:
 1. **Clone the Repository**  
    Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/sunshine-JLU/deepseek-r1-distill-llama-8b-lora.git
+   git clone https://github.com/sunshine-JLU/deepseek-janus-pro-lora.git
 
-   cd deepseek-r1-distill-llama-8b-lora
+   cd deepseek-janus-pro-lora
 
    
 2. **Enviroment**  
@@ -19,7 +19,7 @@ Follow these steps to get started quickly:
    pip install -r requirements.txt
 
 3. **Download the Model**  
-  Set the Hugging Face endpoint and download the deepseek-r1-distill-llama-8b model:
+  Set the Hugging Face endpoint and download the Janus-Pro-7B model:
    ```bash
    HF_ENDPOINT=https://hf-mirror.com huggingface-cli download deepseek-ai/Janus-Pro-7B --local-dir ./Janus-Pro-7B --resume-download --cache-dir ./cache
 
