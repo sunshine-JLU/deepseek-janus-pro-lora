@@ -32,8 +32,12 @@ Follow these steps to get started quickly:
    ```bash
    unzip trump.zip
 
-4. **Run the Notebook**  
+   python process_image_with_description.py
+
+5. **Run the Notebook**  
   Open and run the deepseek-janus-pro-lora.ipynb notebook to start fine-tuning the model.
+
+  Open and run the janus-pro-lora-inference.ipynb notebook to evaluate the model.
 
 ## Hardware requirement
 
