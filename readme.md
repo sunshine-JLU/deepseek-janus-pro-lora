@@ -13,6 +13,10 @@ Follow these steps to get started quickly:
 2. **Enviroment**  
    ```bash
    conda create -n janus-pro-lora python=3.10 -y
+
+   conda init
+
+   source ~/.bashrc
    
    conda activate janus-pro-lora
    
