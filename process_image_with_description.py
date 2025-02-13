@@ -7,7 +7,7 @@ from transformers import AutoConfig, AutoModelForCausalLM
 from janus.models import MultiModalityCausalLM, VLChatProcessor
 
 #up主这里的是原生多模态模型的文件夹地址,记得填你自己的文件夹路径
-model_path = "/root/autodl-tmp/Janus-1/models/Janus-Pro-7B"
+model_path = "/root/autodl-tmp/deepseek-janus-pro-lora/Janus-Pro-7B"
 config = AutoConfig.from_pretrained(model_path)
 language_config = config.language_config
 language_config._attn_implementation = 'eager'
