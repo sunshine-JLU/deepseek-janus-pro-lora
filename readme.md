@@ -27,6 +27,11 @@ Follow these steps to get started quickly:
    ```bash
    modelscope download --model deepseek-ai/Janus-Pro-7B --local_dir ./Janus-Pro-7B
 
+4. **Prepare the Dataset**  
+  Set the Hugging Face endpoint and download the Janus-Pro-7B model:
+   ```bash
+   unzip trump.zip
+
 4. **Run the Notebook**  
   Open and run the deepseek-janus-pro-lora.ipynb notebook to start fine-tuning the model.
 
