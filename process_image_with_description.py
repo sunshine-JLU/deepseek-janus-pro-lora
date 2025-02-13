@@ -160,8 +160,8 @@ def process_images_in_folder(folder_path, output_folder, question="Describe this
         print(f"Processed {filename} -> {output_txt_path}")
 
 # 设置输入文件夹和输出文件夹
-input_folder = "/root/autodl-tmp/Janus-1/trump"  # 替换为你的图片文件夹路径
-output_folder = "/root/autodl-tmp/Janus-1/trump"    # 替换为输出结果文件夹路径
+input_folder = "/root/autodl-tmp/deepseek-janus-pro-lora/trump"  # 替换为你的图片文件夹路径
+output_folder = "/root/autodl-tmp/deepseek-janus-pro-lora/trump"    # 替换为输出结果文件夹路径
 
 # 处理图片
 process_images_in_folder(input_folder, output_folder, question="用中文描述这张照片,照片里的人的名字叫川普")
