@@ -34,7 +34,10 @@ Follow these steps to get started quickly:
 
    python process_image_with_description.py
 
-5. **Run the Notebook**  
+5. **Run the Notebook**
+   ```bash
+   python -m ipykernel install --user --name janus-pro-lora --display-name "Python (janus-pro-lora)"
+   
   Open and run the deepseek-janus-pro-lora.ipynb notebook to start fine-tuning the model.
   Open and run the janus-pro-lora-inference.ipynb notebook to evaluate the model.
 
