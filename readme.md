@@ -25,7 +25,7 @@ Follow these steps to get started quickly:
 3. **Download the Model**  
   Set the Hugging Face endpoint and download the Janus-Pro-7B model:
    ```bash
-   HF_ENDPOINT=https://hf-mirror.com huggingface-cli download deepseek-ai/Janus-Pro-7B --local-dir ./Janus-Pro-7B --resume-download --cache-dir ./cache
+   modelscope download --model deepseek-ai/Janus-Pro-7B --local_dir ./Janus-Pro-7B
 
 4. **Run the Notebook**  
   Open and run the deepseek-janus-pro-lora.ipynb notebook to start fine-tuning the model.
