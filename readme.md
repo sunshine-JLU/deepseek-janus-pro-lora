@@ -23,12 +23,12 @@ Follow these steps to get started quickly:
    pip install -r requirements.txt
 
 3. **Download the Model**  
-  Set the Hugging Face endpoint and download the Janus-Pro-7B model:
+   Download the Janus-Pro-7B model:
    ```bash
    modelscope download --model deepseek-ai/Janus-Pro-7B --local_dir ./Janus-Pro-7B
 
 4. **Prepare the Dataset**  
-  Set the Hugging Face endpoint and download the Janus-Pro-7B model:
+   Prepare your dataset or use my demo dataset to train model:
    ```bash
    unzip trump.zip
 
