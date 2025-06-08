@@ -229,37 +229,37 @@ class EnhancedMultiModalTrainer:
             {"role": "<|Assistant|>", "content": assistant_text},  
         ]
     
-        def train(self):
-            """主训练流程。"""
-            pairs = self._load_data()
-            dataset = [{"image_path": img, "text": txt} for img, txt in pairs]
-    
-            self._prepare_model()
-            self._prepare_optimizer_and_scheduler(len(dataset))
-    
-            training_args = TrainingArguments(
-                output_dir=self.output_dir,
-                num_train_epochs=self.max_epochs,
-                per_device_train_batch_size=self.batch_size,
-                learning_rate=self.lr,
-                **self.training_args,
-            )
-    
-            trainer = Trainer(
-                model=self.model,
-                args=training_args,
-                train_dataset=dataset,
-                data_collator=self._collate_fn,
-                optimizers=(self.optimizer, self.lr_scheduler),
-            )
-    
-            print("[Start!] Start training!!!!!---------->>>>>>>")
-            trainer.train()
-    
-            print("[on Progress] Merging LoRA weights...")
-            self.model = self.model.merge_and_unload()
-    
-            print("[on Progress] Saving...")
-            self.model.save_pretrained(self.output_dir)
-            self.processor.save_pretrained(self.output_dir)
-            print(f"[Done!] Fine-tuned model have saved to {self.output_dir}")
+    def train(self):
+        """主训练流程。"""
+        pairs = self._load_data()
+        dataset = [{"image_path": img, "text": txt} for img, txt in pairs]
+
+        self._prepare_model()
+        self._prepare_optimizer_and_scheduler(len(dataset))
+
+        training_args = TrainingArguments(
+            output_dir=self.output_dir,
+            num_train_epochs=self.max_epochs,
+            per_device_train_batch_size=self.batch_size,
+            learning_rate=self.lr,
+            **self.training_args,
+        )
+
+        trainer = Trainer(
+            model=self.model,
+            args=training_args,
+            train_dataset=dataset,
+            data_collator=self._collate_fn,
+            optimizers=(self.optimizer, self.lr_scheduler),
+        )
+
+        print("[Start!] Start training!!!!!---------->>>>>>>")
+        trainer.train()
+
+        print("[on Progress] Merging LoRA weights...")
+        self.model = self.model.merge_and_unload()
+
+        print("[on Progress] Saving...")
+        self.model.save_pretrained(self.output_dir)
+        self.processor.save_pretrained(self.output_dir)
+        print(f"[Done!] Fine-tuned model have saved to {self.output_dir}")
