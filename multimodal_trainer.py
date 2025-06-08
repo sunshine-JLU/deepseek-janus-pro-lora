@@ -195,61 +195,71 @@ class EnhancedMultiModalTrainer:
             return_tensors="pt",
             force_batchify=True,
         )
-        encoded["labels"] = encoded["input_ids"].clone()
-
-        image_placeholder_token_id = self.processor.tokenizer.convert_tokens_to_ids("<image_placeholder>")
+    
+        # 获取 input_ids 和对应的 EOS token ID
         input_ids = encoded["input_ids"]
+        eos_token_id = self.processor.tokenizer.eos_token_id
+    
+        # 创建 labels，使其为 input_ids 的下一个 token，并在末尾添加 EOS
+        labels = input_ids.clone()
+        labels[:, :-1] = input_ids[:, 1:]
+        labels[:, -1] = eos_token_id  # 确保最后一个 token 是 EOS
+    
+        encoded["labels"] = labels
+    
+        # 获取 <image_placeholder> 的 token ID，并创建 image_token_masks
+        image_placeholder_token_id = self.processor.tokenizer.convert_tokens_to_ids("<image_placeholder>")
         image_token_masks = (input_ids == image_placeholder_token_id)
-
+    
         if not image_token_masks.any():
             raise ValueError("No <image_placeholder> tokens found in the input!")
-
+    
         encoded["image_token_masks"] = image_token_masks
         return dict(encoded)
-
-def _generate_conversation(self, image_path: str, assistant_text: str) -> List[Dict[str, Any]]:  
-    """生成对话模板。"""  
-    # 确保assistant_text以EOS token结尾  
-    eos_token = self.processor.tokenizer.eos_token  
-    if not assistant_text.endswith(eos_token):  
-        assistant_text = assistant_text + eos_token  
-      
-    return [  
-        {"role": "<|User|>", "content": f"<image_placeholder>\n{self.user_question}", "images": [image_path]},  
-        {"role": "<|Assistant|>", "content": assistant_text},  
-    ]
-
-    def train(self):
-        """主训练流程。"""
-        pairs = self._load_data()
-        dataset = [{"image_path": img, "text": txt} for img, txt in pairs]
-
-        self._prepare_model()
-        self._prepare_optimizer_and_scheduler(len(dataset))
-
-        training_args = TrainingArguments(
-            output_dir=self.output_dir,
-            num_train_epochs=self.max_epochs,
-            per_device_train_batch_size=self.batch_size,
-            learning_rate=self.lr,
-            **self.training_args,
-        )
-
-        trainer = Trainer(
-            model=self.model,
-            args=training_args,
-            train_dataset=dataset,
-            data_collator=self._collate_fn,
-            optimizers=(self.optimizer, self.lr_scheduler),
-        )
-
-        print("[Start!] Start training!!!!!---------->>>>>>>")
-        trainer.train()
-
-        print("[on Progress] Merging LoRA weights...")
-        self.model = self.model.merge_and_unload()
-
-        print("[on Progress] Saving...")
-        self.model.save_pretrained(self.output_dir)
-        self.processor.save_pretrained(self.output_dir)
-        print(f"[Done!] Fine-tuned model have saved to {self.output_dir}")
+    
+    def _generate_conversation(self, image_path: str, assistant_text: str) -> List[Dict[str, Any]]:  
+        """生成对话模板。"""  
+        # 确保assistant_text以EOS token结尾  
+        eos_token = self.processor.tokenizer.eos_token  
+        if not assistant_text.endswith(eos_token):  
+            assistant_text = assistant_text + eos_token  
+          
+        return [  
+            {"role": "<|User|>", "content": f"<image_placeholder>\n{self.user_question}", "images": [image_path]},  
+            {"role": "<|Assistant|>", "content": assistant_text},  
+        ]
+    
+        def train(self):
+            """主训练流程。"""
+            pairs = self._load_data()
+            dataset = [{"image_path": img, "text": txt} for img, txt in pairs]
+    
+            self._prepare_model()
+            self._prepare_optimizer_and_scheduler(len(dataset))
+    
+            training_args = TrainingArguments(
+                output_dir=self.output_dir,
+                num_train_epochs=self.max_epochs,
+                per_device_train_batch_size=self.batch_size,
+                learning_rate=self.lr,
+                **self.training_args,
+            )
+    
+            trainer = Trainer(
+                model=self.model,
+                args=training_args,
+                train_dataset=dataset,
+                data_collator=self._collate_fn,
+                optimizers=(self.optimizer, self.lr_scheduler),
+            )
+    
+            print("[Start!] Start training!!!!!---------->>>>>>>")
+            trainer.train()
+    
+            print("[on Progress] Merging LoRA weights...")
+            self.model = self.model.merge_and_unload()
+    
+            print("[on Progress] Saving...")
+            self.model.save_pretrained(self.output_dir)
+            self.processor.save_pretrained(self.output_dir)
+            print(f"[Done!] Fine-tuned model have saved to {self.output_dir}")
