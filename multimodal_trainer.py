@@ -207,12 +207,17 @@ class EnhancedMultiModalTrainer:
         encoded["image_token_masks"] = image_token_masks
         return dict(encoded)
 
-    def _generate_conversation(self, image_path: str, assistant_text: str) -> List[Dict[str, Any]]:
-        """生成对话模板。"""
-        return [
-            {"role": "<|User|>", "content": f"<image_placeholder>\n{self.user_question}", "images": [image_path]},
-            {"role": "<|Assistant|>", "content": assistant_text},
-        ]
+def _generate_conversation(self, image_path: str, assistant_text: str) -> List[Dict[str, Any]]:  
+    """生成对话模板。"""  
+    # 确保assistant_text以EOS token结尾  
+    eos_token = self.processor.tokenizer.eos_token  
+    if not assistant_text.endswith(eos_token):  
+        assistant_text = assistant_text + eos_token  
+      
+    return [  
+        {"role": "<|User|>", "content": f"<image_placeholder>\n{self.user_question}", "images": [image_path]},  
+        {"role": "<|Assistant|>", "content": assistant_text},  
+    ]
 
     def train(self):
         """主训练流程。"""
