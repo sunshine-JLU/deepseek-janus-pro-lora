@@ -195,28 +195,18 @@ class EnhancedMultiModalTrainer:
             return_tensors="pt",
             force_batchify=True,
         )
-    
-        # 获取 input_ids 和对应的 EOS token ID
-        input_ids = encoded["input_ids"]
-        eos_token_id = self.processor.tokenizer.eos_token_id
-    
-        # 创建 labels，使其为 input_ids 的下一个 token，并在末尾添加 EOS
-        labels = input_ids.clone()
-        labels[:, :-1] = input_ids[:, 1:]
-        labels[:, -1] = eos_token_id  # 确保最后一个 token 是 EOS
-    
-        encoded["labels"] = labels
-    
-        # 获取 <image_placeholder> 的 token ID，并创建 image_token_masks
+        encoded["labels"] = encoded["input_ids"].clone()
+
         image_placeholder_token_id = self.processor.tokenizer.convert_tokens_to_ids("<image_placeholder>")
+        input_ids = encoded["input_ids"]
         image_token_masks = (input_ids == image_placeholder_token_id)
-    
+
         if not image_token_masks.any():
             raise ValueError("No <image_placeholder> tokens found in the input!")
-    
+
         encoded["image_token_masks"] = image_token_masks
         return dict(encoded)
-    
+
     def _generate_conversation(self, image_path: str, assistant_text: str) -> List[Dict[str, Any]]:  
         """生成对话模板。"""  
         # 确保assistant_text以EOS token结尾  
@@ -228,7 +218,7 @@ class EnhancedMultiModalTrainer:
             {"role": "<|User|>", "content": f"<image_placeholder>\n{self.user_question}", "images": [image_path]},  
             {"role": "<|Assistant|>", "content": assistant_text},  
         ]
-    
+
     def train(self):
         """主训练流程。"""
         pairs = self._load_data()
